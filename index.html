@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
 
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="index.css">
   
   <title>Frontend Mentor | Todo app</title>
 
@@ -15,22 +20,102 @@
   </style>
 </head>
 <body>
+  <main>
+    <header class="header">
+      <h1 class="header__title">TODO</h1>
+      <img class="header__theme-mode header__theme-mode--light" src="images/icon-moon.svg" alt="moon icon">
+      <img class="header__theme-mode header__theme-mode--dark" src="images/icon-sun.svg" alt="sun icon">
+    </header>
 
-  Todo
+    <div class="input">
+      <form class="input__form">
+        <input type="radio" name="input__radio" id="input__radio" class="input__radio" disabled>
+        <input type="text" name="input__text" id="input__text" class="input__text" placeholder="Create a new todo...">
+        <button type="submit" style="display:none"></button>
+      </form>
+    </div>
 
-  <!-- Add dynamic number --> items left
+    <div class="tasks">
+      <div class="tasks__list">
+        <div class="task-wrapper">
+          <input type="radio" name="task__input-radio" id="task__input-radio" class="task__input-radio">
+          <p class="task__title">Task Title</p>
+        </div>
+      </div>
+      <div class="tasks__info">
+        <span class="tasks__info-counter"><span class="tasks__info-counter-number">X</span> items left</span>
+        <div class="tasks__info-filters">
+          <span class="tasks__info-filter">All</span>
+          <span class="tasks__info-filter">Active</span>
+          <span class="tasks__info-filter">Completed</span>
+        </div>
+        
+        <span class="tasks__info-counter">Clear Completed</span>
+      </div>
+    </div>
 
-  All
-  Active 
-  Completed
-
-  Clear Completed
-
-  Drag and drop to reorder list
+    <p class="hint">Drag and drop to reorder list</p>
+  </main>  
 
   <div class="attribution">
     Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
     Coded by <a href="#">Your Name Here</a>.
-  </div>
+  </div>  
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", function() {
+      function loadTasks() {
+        return localStorage.getItem("tasks");
+      }
+
+      function renderTasks(tasks) {
+        const copyOfTasks = tasks.map(t => t);
+        copyOfTasks.forEach((task, index) => {
+          const $tasksList = $('.tasks__list');
+          const $taskWrapper = $(document.createElement('div'))
+          const $radioInput = $(document.createElement('input'));
+          const $taskTitle = $(document.createElement('p'));
+          
+          $($radioInput).attr('type', 'radio');
+          $($radioInput).val(!!task.completed);
+          $($taskTitle).text(task.content);
+
+          $($radioInput).change(function(e) {
+            console.log($(this).val());
+            $($taskTitle).addClass('completed');
+          });
+
+          $($radioInput).addClass('task__input-radio');
+          $($taskTitle).addClass('task__title');
+          $($taskWrapper).addClass('task-wrapper');
+
+          $($taskWrapper).append($radioInput);
+          $($taskWrapper).append($taskTitle);
+          $($tasksList).append($taskWrapper);
+        });
+      }
+
+      const savedTasks = JSON.parse(loadTasks()) || [];
+      const $form = $('.input__form');
+      
+      renderTasks(savedTasks);
+
+
+      $($form).submit(function(e) {
+        e.preventDefault();
+        const todo = $(this.elements['input__text']).val();
+        savedTasks.push({
+          completed: 0,
+          content: todo
+        });
+
+        console.log(savedTasks);
+
+        localStorage.setItem("tasks", JSON.stringify(savedTasks));
+        // renderTasks(savedTasks);
+      });
+    });
+  </script>
 </body>
 </html>
