@@ -1,0 +1,111 @@
+:root {
+  /* Colors */
+  --primary-bright-blue: #3a7bfd;
+  --primary-check-bg: linear-gradient #57ddff to #c058f3;
+
+  --neural-very-light-gray: #fafafa;
+  --neutral-very-Light-grayish-blue: #e4e5f1;
+  --neutral-light-grayish-blue: #d2d3db;
+  --neutral-dark-grayish-blue: #9394a5;
+  --neutral-very-Dark-grayish-blue: #484b6a;
+
+  --fs: 18px;
+  --ff: 'Josefin Sans', sans-serif;
+  --fw400: 400;
+  --fw700: 700;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-repeat: no-repeat;
+  background-image: url("images/bg-desktop-light.jpg");
+  position: relative;
+  font-family: var(--ff);
+}
+
+main {
+  width: 50%;
+  position: absolute;
+  left: 50%;
+  top: 21%;
+  transform: translate(-50%, -50%);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__title {
+  font-size: 40px;
+  letter-spacing: 18px;
+  color: var(--neural-very-light-gray);
+}
+
+.header__theme-mode--dark {
+  display: none;
+}
+
+.input {
+  padding: 10px;
+  padding-left: 20px;
+  background: white;
+  border-radius: 10px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.input .input__radio {
+  margin: 0;
+  width: 25px;
+  height: 25px;
+}
+
+.input .input__text {
+  border: none;
+  font-size: var(--fs);
+  padding: 10px;
+  color: var(--neutral-very-Dark-grayish-blue);
+}
+
+.input .input__text:focus-visible {
+  border: none;
+  outline: none;
+}
+
+.tasks {
+  margin-top: 20px;
+  background-color: var(--neural-very-light-gray);
+  padding: 10px;
+}
+
+.tasks__info {
+  display: flex;
+  justify-content: space-between;
+  color: var(--neutral-dark-grayish-blue);
+}
+
+.tasks__info span {
+  cursor: pointer;
+  transition: ease-in-out 100ms;
+}
+
+.tasks__info span:hover,
+.tasks__info span:focus {
+  border-bottom: 1px solid var(--neutral-very-Dark-grayish-blue);
+}
+
+.tasks__info-filters {
+  display: flex;
+  gap: 20px;
+}
+
+.hint {
+  text-align: center;
+  color: var(--neutral-dark-grayish-blue);
+}
