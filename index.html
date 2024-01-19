@@ -11,20 +11,14 @@
   
   <link rel="stylesheet" href="index.css">
   
-  <title>Frontend Mentor | Todo app</title>
-
-  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-  <style>
-    .attribution { font-size: 11px; text-align: center; }
-    .attribution a { color: hsl(228, 45%, 44%); }
-  </style>
+  <title>Todo app</title>
 </head>
 <body>
   <main>
     <header class="header">
       <h1 class="header__title">TODO</h1>
       <img class="header__theme-mode header__theme-mode--light" src="images/icon-moon.svg" alt="moon icon">
-      <img class="header__theme-mode header__theme-mode--dark" src="images/icon-sun.svg" alt="sun icon">
+      <img class="header__theme-mode header__theme-mode--dark hidden" src="images/icon-sun.svg" alt="sun icon">
     </header>
 
     <div class="input">
@@ -38,19 +32,18 @@
     <div class="tasks">
       <div class="tasks__list">
         <div class="task-wrapper">
-          <input type="radio" name="task__input-radio" id="task__input-radio" class="task__input-radio">
-          <p class="task__title">Task Title</p>
+          <p class="task__title" style="width: 100%;text-align: center;">Looks like you have completed all your tasks!</p>
         </div>
       </div>
       <div class="tasks__info">
-        <span class="tasks__info-counter"><span class="tasks__info-counter-number">X</span> items left</span>
+        <span class="tasks__info-counter"><span class="tasks__info-counter-number">0</span> items left</span>
         <div class="tasks__info-filters">
           <span class="tasks__info-filter">All</span>
           <span class="tasks__info-filter">Active</span>
           <span class="tasks__info-filter">Completed</span>
         </div>
         
-        <span class="tasks__info-counter">Clear Completed</span>
+        <span class="tasks__info-clear-completed">Clear Completed</span>
       </div>
     </div>
 
@@ -65,30 +58,43 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script>
     window.addEventListener("DOMContentLoaded", function() {
+      function saveTasksOnLocalStorage(tasks) {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+      }
+
       function loadTasks() {
-        return localStorage.getItem("tasks");
+        return JSON.parse(localStorage.getItem("tasks"));
       }
 
       function renderTasks(tasks) {
+        const $tasksList = $('.tasks__list');
         const copyOfTasks = tasks.map(t => t);
+        const $taskCounter = $('.tasks__info-counter-number');        
+        $($taskCounter).text(tasks.length);
+        
+        $($tasksList).empty();
         copyOfTasks.forEach((task, index) => {
-          const $tasksList = $('.tasks__list');
           const $taskWrapper = $(document.createElement('div'))
           const $radioInput = $(document.createElement('input'));
           const $taskTitle = $(document.createElement('p'));
           
-          $($radioInput).attr('type', 'radio');
-          $($radioInput).val(!!task.completed);
+          $($radioInput).attr('type', 'checkbox');
           $($taskTitle).text(task.content);
 
-          $($radioInput).change(function(e) {
-            console.log($(this).val());
-            $($taskTitle).addClass('completed');
+          $($radioInput).click(function(e) {
+            const $input = $(this); 
+            if(this.checked) { $($taskTitle).addClass('completed'); }
+            else { $($taskTitle).removeClass('completed'); }
+            tasks[index].completed = this.checked;
+            console.log(tasks);
+            saveTasksOnLocalStorage(tasks);
           });
 
           $($radioInput).addClass('task__input-radio');
           $($taskTitle).addClass('task__title');
           $($taskWrapper).addClass('task-wrapper');
+
+          $($taskWrapper).attr('data-id', task.id);
 
           $($taskWrapper).append($radioInput);
           $($taskWrapper).append($taskTitle);
@@ -96,25 +102,52 @@
         });
       }
 
-      const savedTasks = JSON.parse(loadTasks()) || [];
+      function clearCompletedTasks() {
+        const all_tasks = loadTasks() || [];
+        let uncompleted_tasks = [];
+        const $completedTasksWrapper = $('.task__title.completed').parent();
+        if ($completedTasksWrapper.length > 0) { 
+          $completedTasksWrapper.remove(); 
+          uncompleted_tasks = all_tasks.filter(t => !t.completed);
+        }
+        console.log(uncompleted_tasks);
+        renderTasks(uncompleted_tasks);
+        saveTasksOnLocalStorage(uncompleted_tasks);
+      }
+
+      let savedTasks = loadTasks() || []; 
       const $form = $('.input__form');
+      const $clearCompletedBtn = $('.tasks__info-clear-completed');
+      const $themeModeBtn = $('.header__theme-mode');
       
       renderTasks(savedTasks);
 
-
       $($form).submit(function(e) {
         e.preventDefault();
+        savedTasks = loadTasks() || []; 
         const todo = $(this.elements['input__text']).val();
         savedTasks.push({
-          completed: 0,
+          id: new Date().getTime(),
+          completed: false,
           content: todo
         });
 
-        console.log(savedTasks);
-
-        localStorage.setItem("tasks", JSON.stringify(savedTasks));
-        // renderTasks(savedTasks);
+        saveTasksOnLocalStorage(savedTasks);
+        renderTasks(savedTasks);
+        this.reset();
       });
+
+      $($clearCompletedBtn).click(clearCompletedTasks);
+      $($themeModeBtn).click(function (e) {
+        const icons = Array.from($themeModeBtn);
+        const [ targetIcon ] = icons.filter(i => i.classList.contains('hidden'));
+        this.classList.add('hidden');
+        targetIcon.classList.remove('hidden');
+        if ($(this).attr('alt').search('moon') === -1) { $('body').removeClass('dark'); }
+        else { $('body').addClass('dark'); }
+      });
+
+
     });
   </script>
 </body>
