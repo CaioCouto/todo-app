@@ -21,6 +21,7 @@ body {
   padding: 0;
   background-repeat: no-repeat;
   background-image: url("images/bg-desktop-light.jpg");
+  background-size: contain;
   position: relative;
   font-family: var(--ff);
   display: flex;
@@ -34,7 +35,7 @@ body.dark {
 }
 
 main {
-  width: 36%;
+  width: 50%;
   margin: 50px auto 0;
 }
 
@@ -226,3 +227,63 @@ body.dark .attribution {
 body.dark .attribution a {
   color: var(--neutral-very-Light-grayish-blue);
 }
+
+@media (min-width: 1441px) {
+  main {
+    margin-top: 5vw; 
+  }
+}
+
+@media (max-width: 1200px) {
+  main {
+    width: 65%; 
+  }
+}
+
+@media (max-width: 1019px) {
+  body {
+    background-size: auto;
+    background-position: 24% 0;
+
+  }
+
+  main {
+    width: 90%; 
+  }
+
+  .tasks__info {
+    padding: 20px 10px;
+    font-size: 13px;
+  }
+
+  .tasks__info-filters {
+    gap: 7px;
+  }
+}
+
+@media (max-width: 767px) {
+  main {
+    width: 80%; 
+  }
+}
+
+@media (max-width: 479px) {
+  body {
+    background-size: auto;
+    background-position: 24% 0;
+  }
+
+  main {
+    width: 90%; 
+  }
+
+  .tasks__info {
+    padding: 20px 5px;
+    font-size: 13px;
+  }
+
+  .attribution {
+    font-size: 13px;
+  }
+}
+
