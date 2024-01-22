@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap" rel="stylesheet">
   
+  
   <link rel="stylesheet" href="index.css">
   
   <title>Todo app</title>
@@ -52,12 +53,22 @@
 
   <div class="attribution">
     Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
-    Coded by <a href="#">Your Name Here</a>.
+    Coded by <a href="https://github.com/CaioCouto">Caio Couto</a>.
   </div>  
 
+
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.11/lib/draggable.bundle.js"></script>
   <script>
     window.addEventListener("DOMContentLoaded", function() {
+      function saveThemeOnLocalStorage(theme) {
+        localStorage.setItem("theme", JSON.stringify(theme));
+      }
+      
+      function loadTheme() {
+        return JSON.parse(localStorage.getItem("theme"));
+      }
+
       function saveTasksOnLocalStorage(tasks) {
         localStorage.setItem("tasks", JSON.stringify(tasks));
       }
@@ -116,11 +127,16 @@
       }
 
       let savedTasks = loadTasks() || []; 
+      let savedTheme = loadTheme() || 'dark'; 
       const $form = $('.input__form');
       const $clearCompletedBtn = $('.tasks__info-clear-completed');
       const $themeModeBtn = $('.header__theme-mode');
+      const tasksList = document.querySelector('.tasks__list');
       
       renderTasks(savedTasks);
+
+      if (savedTheme === 'light') { $('body').removeClass('dark'); }
+      else { $('body').addClass('dark'); }
 
       $($form).submit(function(e) {
         e.preventDefault();
@@ -138,16 +154,24 @@
       });
 
       $($clearCompletedBtn).click(clearCompletedTasks);
+      
       $($themeModeBtn).click(function (e) {
         const icons = Array.from($themeModeBtn);
         const [ targetIcon ] = icons.filter(i => i.classList.contains('hidden'));
         this.classList.add('hidden');
         targetIcon.classList.remove('hidden');
-        if ($(this).attr('alt').search('moon') === -1) { $('body').removeClass('dark'); }
-        else { $('body').addClass('dark'); }
+        savedTheme = savedTheme === 'light' ? 'dark' : 'light';
+        if (savedTheme === 'light') { 
+          $('body').removeClass('dark'); 
+          saveThemeOnLocalStorage('light');
+        }
+        else { 
+          $('body').addClass('dark'); 
+          saveThemeOnLocalStorage('dark');
+        }
       });
 
-
+      const swappable = new Draggable.Swappable(tasksList, { draggable: 'div.task-wrapper' });
     });
   </script>
 </body>

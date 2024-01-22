@@ -23,7 +23,9 @@ body {
   background-image: url("images/bg-desktop-light.jpg");
   position: relative;
   font-family: var(--ff);
-  display: flow-root;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 body.dark {
@@ -146,6 +148,11 @@ body.dark .tasks {
   margin-bottom: 10px;
   padding: 20px;
   border-bottom: 1px solid var(--neutral-light-grayish-blue);
+  cursor: grab;
+}
+
+.task-wrapper:active {
+  cursor: grabbing;
 }
 
 body.dark .task-wrapper {
@@ -158,7 +165,7 @@ body.dark .task-wrapper {
 }
 
 body.dark .task__title {
-  color: var(--neutral-dark-grayish-blue);
+  color: var(--neutral-light-grayish-blue);
 }
 
 .task__title.completed {
@@ -203,6 +210,19 @@ body.dark .task__title.completed {
 .attribution {
   margin-top: auto;
   padding: 20px;
-  font-size: 11px; 
+  font-size: var(--fs); 
   text-align: center;
+  color: var(--neutral-dark-grayish-blue);
+}
+
+.attribution a {
+  color: var(--neutral-very-Dark-grayish-blue);
+}
+
+body.dark .attribution {
+  color: var(--neutral-light-grayish-blue);
+}
+
+body.dark .attribution a {
+  color: var(--neutral-very-Light-grayish-blue);
 }
